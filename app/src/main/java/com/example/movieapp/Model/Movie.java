@@ -1,37 +1,66 @@
 package com.example.movieapp.Model;
 
 public class Movie {
-    private String mtitle;
-    private String mthumbnel;
-    private String moverview;
-    private double mVoteAvegrage;
-    private String mRelagedate;
+    /** Title of the movie */
+    private String mTitle;
+    /** Movie poster image thumbnail */
+    private String mThumbnail;
+    /** Overview (or plot synopsis) of the movie */
+    private String mOverview;
+    /** Vote average (or user rating) of the movie */
+    private double mVoteAverage;
+    /** Release date of the movie */
+    private String mReleaseDate;
 
-    public Movie(String mtitle, String mthumbnel, String moverview, double mVoteAvegrage, String mRelagedate) {
-        this.mtitle = mtitle;
-        this.mthumbnel = mthumbnel;
-        this.moverview = moverview;
-        this.mVoteAvegrage = mVoteAvegrage;
-        this.mRelagedate = mRelagedate;
+    /**
+     * Constructs a new {@link Movie} object
+     *
+     * @param title is the original title of the movie
+     * @param thumbnail is movie poster image thumbnail
+     * @param overview is a plot synopsis of the movie
+     * @param voteAverage is user rating of the movie
+     * @param releaseDate is the release date of the movie
+     */
+    public Movie(String title, String thumbnail, String overview, double voteAverage, String releaseDate) {
+        mTitle = title;
+        mThumbnail = thumbnail;
+        mOverview = overview;
+        mVoteAverage = voteAverage;
+        mReleaseDate = releaseDate;
     }
 
-    public String gettitle() {
-        return mtitle;
+    /**
+     * Returns the original title of the movie
+     */
+    public String getTitle() {
+        return mTitle;
     }
 
-    public String getthumbnel() {
-        return mthumbnel;
+    /**
+     * Returns a movie poster thumbnail image url
+     */
+    public String getThumbnail() {
+        return mThumbnail;
     }
 
-    public String getMoverview() {
-        return moverview;
+    /**
+     * Returns a plot synopsis of the movie
+     */
+    public String getOverview() {
+        return mOverview;
     }
 
-    public double getVoteAvegrage() {
-        return mVoteAvegrage;
+    /**
+     * Returns user rating of the movie
+     */
+    public double getVoteAverage() {
+        return mVoteAverage;
     }
 
-    public String getRelagedate() {
-        return mRelagedate;
+    /**
+     * Returns release date of the movie
+     */
+    public String getReleaseData() {
+        return mReleaseDate;
     }
 }

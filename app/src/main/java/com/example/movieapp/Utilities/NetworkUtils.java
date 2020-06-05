@@ -1,6 +1,7 @@
 package com.example.movieapp.Utilities;
 
 import android.net.Uri;
+import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,28 +10,53 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
 
-public class NetworkUtils {
-    private static final String TAG = "NetworkUtils";
-    private static final String MOVIEBASEURL = "https://api.themoviedb.org/3";
-    private static final String MOVIEPATH = "movie";
-    private static final String API_KEY_PARAM = "api_key";
-    private static final String API__KEY = "30f0cc39fda572e52bbc94adab7ac7ec";
+public final class NetworkUtils {
 
-    public static URL builtMovieUrl(String sortCritirea) {
-        Uri builtUri = Uri.parse(MOVIEBASEURL)
-                .buildUpon()
-                .appendPath(MOVIEPATH)
-                .appendQueryParameter(API_KEY_PARAM, API__KEY)
+    /** Tag for the log message */
+    private static final String TAG = NetworkUtils.class.getSimpleName();
+
+    /** The base movie URL from TMDb */
+    private static final String MOVIE_BASE_URL = "https://api.themoviedb.org/3/";
+
+    /** Constant value for the movie */
+    private static final String MOVIE_PATH = "movie";
+    /** Constant value for api key parameter */
+    private static final String API_KEY_PARAM = "api_key";
+
+
+    /** Use your API Key */
+    private static final String API_KEY = "30f0cc39fda572e52bbc94adab7ac7ec";
+
+    /**
+     * Builds the URL used to talk to the movie server using a sort criteria.
+     * @param sortCriteria is a query for sorting movies by popularity or top rating.
+     * @return The URL to use to query the movie server.
+     */
+    public static URL buildMovieUrl(String sortCriteria) {
+        Uri builtUri = Uri.parse(MOVIE_BASE_URL).buildUpon()
+                .appendPath(MOVIE_PATH)
+                .appendPath(sortCriteria)
+                .appendQueryParameter(API_KEY_PARAM, API_KEY)
                 .build();
+
         URL url = null;
         try {
             url = new URL(builtUri.toString());
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            Log.e(TAG, "Problem with building URL");
         }
+
+        Log.d(TAG, "Built Movie URL " + url);
         return url;
     }
 
+    /**
+     * This method returns the entire result from the HTTP response.
+     *
+     * @param url The URL to fetch the HTTP response from.
+     * @return The contents of the HTTP response.
+     * @throws IOException Related to network and stream reading
+     */
     public static String getResponseFromHttpUrl(URL url) throws IOException {
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
         try {
@@ -38,6 +64,7 @@ public class NetworkUtils {
 
             Scanner scanner = new Scanner(in);
             scanner.useDelimiter("\\A");
+
             boolean hasInput = scanner.hasNext();
             if (hasInput) {
                 return scanner.next();

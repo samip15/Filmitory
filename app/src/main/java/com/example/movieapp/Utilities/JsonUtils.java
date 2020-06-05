@@ -13,82 +13,143 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class JsonUtils {
-    private static final String TAG = "JsonUtils";
-    private static final String KEY_RESULTS = "results";
-    private static final String KEY_ORIGINAL_TITLE = "original_title";
-    private static final String KEY_POSTER_PATH = "poster_path";
-    private static final String KEY_OVERVIEW = "overview";
-    private static final String KEY_VOTE_AVERAGE = "vote_average";
-    private static final String KEY_REALEASE_DATE = "release_date";
-    private static final String KEY_STATUS_CODE = "status_code";
-    private static final String IMAGE_BASE_URL = "https://image.tmdb.org/t/p/";
-    private static final String IMAGE_FILE_SIZE  = "w185";
+    /**
+     * Tag for the log message
+     */
+    private static final String TAG = JsonUtils.class.getSimpleName();
 
-     public static List<Movie> parseMovieJson(String movieJsonStr)throws JSONException {
-        //IF THE JSON STR IS EMPTY OR NOT
-        if (TextUtils.isEmpty(movieJsonStr)){
+    /**
+     * Constants for the Json key.
+     * Each movie in the TheMovieDb JSON data is an element of the "results" array
+     */
+    private static final String KEY_RESULTS = "results";
+
+    /**
+     * Original title for the movie
+     */
+    private static final String KEY_ORIGINAL_TITLE = "original_title";
+
+    /**
+     * Poster path for the movie
+     */
+    private static final String KEY_POSTER_PATH = "poster_path";
+
+    /**
+     * A plot synopsis (called overview in the api) for the movie
+     */
+    private static final String KEY_OVERVIEW = "overview";
+
+    /**
+     * User rating (called vote_average in the api) for the movie
+     */
+    private static final String KEY_VOTE_AVERAGE = "vote_average";
+
+    /**
+     * Release data for the movie
+     */
+    private static final String KEY_RELEASE_DATE = "release_date";
+
+    /**
+     * Status code
+     */
+    private static final String KEY_STATUS_CODE = "status_code";
+
+    /**
+     * The base image URL to build the complete url that is necessary for fetching the image
+     */
+    private static final String IMAGE_BASE_URL = "https://image.tmdb.org/t/p/";
+
+    /**
+     * The image file size to build the complete url that is necessary for fetching the image
+     */
+    private static final String IMAGE_FILE_SIZE = "w185";
+
+    /**
+     * This method parses JSON from a web response and returns a List of Movies describing the movie
+     *
+     * @param movieJsonStr JSON response from server
+     * @return List of Movies describing movie data
+     */
+    public static List<Movie> parseMovieJson(String movieJsonStr) throws JSONException {
+        // If the JSON String is empty or null, then return early
+        if (TextUtils.isEmpty(movieJsonStr)) {
             return null;
         }
-        List<Movie> movies  = new ArrayList<>();
-        //create a main json object
-        JSONObject movieBaseJson = new JSONObject(movieJsonStr);
-        if (movieBaseJson.has(KEY_STATUS_CODE)){
-            int errorcode = movieBaseJson.getInt(KEY_STATUS_CODE);
-            switch (errorcode){
-                case HttpURLConnection
-                        .HTTP_OK:
-                    break;
 
-                case HttpURLConnection
-                        .HTTP_NOT_FOUND:
+        // Create an empty List of movies to hold each movie object
+        List<Movie> movies = new ArrayList<>();
+
+        // Create a JSONObject from the JSON response string
+        JSONObject movieBaseJson = new JSONObject(movieJsonStr);
+
+        /** Check if there is an error */
+        if (movieBaseJson.has(KEY_STATUS_CODE)) {
+            int errorCode = movieBaseJson.getInt(KEY_STATUS_CODE);
+
+            switch (errorCode) {
+                case HttpURLConnection.HTTP_OK:
+                    break;
+                case HttpURLConnection.HTTP_NOT_FOUND:
+                    /* Invalid id: The pre-requisite id is invalid or not found.*/
                     return null;
                 default:
                     return null;
-
             }
         }
 
-        //parsing all values
+        // Get the JSON array representing the result
+        JSONArray resultsArray = movieBaseJson.getJSONArray(KEY_RESULTS);
+        for (int i = 0; i < resultsArray.length(); i++) {
+            // Get a single movie at position i within the list of movies
+            JSONObject currentMovie = resultsArray.getJSONObject(i);
 
-        JSONArray resultArray = movieBaseJson.getJSONArray(KEY_RESULTS);
-        for (int i=0;i<resultArray.length();i++){
-            JSONObject currentMovie = resultArray.getJSONObject(i);
-            //poster path
-            String posterpath = null;
-            if (currentMovie.has(KEY_POSTER_PATH)){
-                posterpath = currentMovie.getString(KEY_POSTER_PATH);
-
+            // For a given movie, if it contains the key called "poster_path", extract the value for
+            // the key
+            String posterPath = null;
+            if (currentMovie.has(KEY_POSTER_PATH)) {
+                // Extract the value for the key called "poster_path"
+                posterPath = currentMovie.getString(KEY_POSTER_PATH);
             }
-            String thumbnelUrl = IMAGE_BASE_URL+IMAGE_FILE_SIZE+posterpath;
+            // Combining base image url, image file size and poster path to get a final thumbnail url
+            String thumbnailUrl = IMAGE_BASE_URL + IMAGE_FILE_SIZE + posterPath;
 
-            //original title
-            String originaltitle = null;
-            if (currentMovie.has(KEY_ORIGINAL_TITLE)){
-                originaltitle = currentMovie.getString(KEY_ORIGINAL_TITLE);
-            }
-
-            //overview
-            String overview = null;
-            if (currentMovie.has(KEY_OVERVIEW)){
-                originaltitle = currentMovie.getString(KEY_OVERVIEW);
-            }
-
-            //release date
-            String releasedate = null;
-            if (currentMovie.has(KEY_REALEASE_DATE)){
-                originaltitle = currentMovie.getString(KEY_REALEASE_DATE);
+            // For a given movie, if it contains the key called "original_title", extract the value for
+            // the key
+            String originalTitle = null;
+            if (currentMovie.has(KEY_ORIGINAL_TITLE)) {
+                // Extract the value for the key called "original_title"
+                originalTitle = currentMovie.getString(KEY_ORIGINAL_TITLE);
             }
 
-            //AVG VOTE
-            double averagevote = 0;
-            if (currentMovie.has(KEY_VOTE_AVERAGE)){
-                originaltitle = currentMovie.getString(KEY_VOTE_AVERAGE);
+            // For a given movie, if it contains the key called "overview", extract the value for the key
+            String overView = null;
+            if (currentMovie.has(KEY_OVERVIEW)) {
+                // Extract the value for the key called "overview"
+                overView = currentMovie.getString(KEY_OVERVIEW);
             }
-            // Movie Object
-            Movie movie = new Movie(originaltitle,thumbnelUrl,overview,averagevote,releasedate);
+
+            // For a given movie, if it contains the key called "vote_average", extract the value for the key
+            double voteAverage = 0;
+            if (currentMovie.has(KEY_VOTE_AVERAGE)) {
+                // Extract the value for the key called "vote_average"
+                voteAverage = currentMovie.getDouble(KEY_VOTE_AVERAGE);
+            }
+
+            // For a given movie, if it contains the key called "release_date", extract the value for the key
+            String releaseDate = null;
+            if (currentMovie.has(KEY_RELEASE_DATE)) {
+                // Extract the value for the key called "release_date"
+                releaseDate = currentMovie.getString(KEY_RELEASE_DATE);
+            }
+
+            // Create a new {@link Movie} object
+            Movie movie = new Movie(originalTitle, thumbnailUrl, overView, voteAverage, releaseDate);
+            // Add the new {@link Movie} to the list of movies
             movies.add(movie);
         }
-        return movies;
 
+        // Return the list of movies
+        return movies;
     }
+
 }

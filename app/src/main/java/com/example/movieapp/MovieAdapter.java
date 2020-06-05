@@ -31,9 +31,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     @Override
     public void onBindViewHolder(@NonNull MovieViewHolder holder, int position) {
         Movie movie = mMovies.get(position);
-        String title = movie.gettitle();
-        String thumbnel = movie.getthumbnel();
-        double voteavg = movie.getVoteAvegrage();
+        String title = movie.getTitle();
+        String thumbnel = movie.getThumbnail();
+        double voteavg = movie.getVoteAverage();
 
         holder.titletext_view.setText(title);
         holder.vote_avgtext_view.setText(String.valueOf(voteavg));
@@ -47,6 +47,22 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         }else{
             return mMovies.size();
         }
+    }
+
+    public void setMovies(List<Movie> movies) {
+        mMovies = movies;
+        notifyDataSetChanged();
+    }
+
+    public void clearAll() {
+        mMovies.clear();
+        notifyDataSetChanged();
+    }
+
+    public void addAll(List<Movie> movies) {
+        mMovies.clear();
+        mMovies.addAll(movies);
+        notifyDataSetChanged();
     }
 
     public class MovieViewHolder extends RecyclerView.ViewHolder{

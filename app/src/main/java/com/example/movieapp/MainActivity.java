@@ -22,28 +22,34 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
-    RecyclerView mRecyclerview;
-    private static final int GRIDSPANCOUNT = 3;
+
     private MovieAdapter mMovieAdapter;
+    private static final int GRID_SPAN_COUNT = 3;
+    RecyclerView mRecyclerView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        findViewById(R.id.rv_movie);
-        //layout manager
-        GridLayoutManager layoutManager = new GridLayoutManager(this,GRIDSPANCOUNT);
-        mRecyclerview.setLayoutManager(layoutManager);
-        //performance
-        mRecyclerview.setHasFixedSize(true);
+        mRecyclerView = findViewById(R.id.rv_movie);
+
+
+        GridLayoutManager layoutManager = new GridLayoutManager(this, GRID_SPAN_COUNT);
+        mRecyclerView.setLayoutManager(layoutManager);
+
+        mRecyclerView.setHasFixedSize(true);
+
         List<Movie> movies = new ArrayList<>();
         mMovieAdapter = new MovieAdapter(movies);
-        mRecyclerview.setAdapter(mMovieAdapter);
+        mRecyclerView.setAdapter(mMovieAdapter);
         loadMovieData();
     }
     private void loadMovieData() {
-        String sort = MoviePrefrences.getPrehredshortcritirea(this);
+        String sort = MoviePrefrences.getPreferredSortCriteria(this);
         new FetchMovieTask().execute(sort);
     }
+
+
     public class FetchMovieTask extends AsyncTask<String, Void, List<Movie>> {
 
         @Override
@@ -53,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             String url = params[0];
-            URL movieRequestUrl = NetworkUtils.builtMovieUrl(url);
+            URL movieRequestUrl = NetworkUtils.buildMovieUrl(url);
 
             try {
                 String jsonMovieResponse = NetworkUtils.getResponseFromHttpUrl(movieRequestUrl);
@@ -75,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(List<Movie> movies) {
             // Clear the adapter of the previous movie data
-            mMovieAdapter.cl
+            mMovieAdapter.clearAll();
 
             // Add the movie data
             if (movies != null && !movies.isEmpty()) {
