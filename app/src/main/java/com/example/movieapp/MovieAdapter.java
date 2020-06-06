@@ -17,15 +17,15 @@ import java.util.List;
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
     List<Movie> mMovies;
 
-    public MovieAdapter(List<Movie> movies){
+    public MovieAdapter(List<Movie> movies) {
         this.mMovies = movies;
     }
 
     @NonNull
     @Override
     public MovieViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
-       View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.movie_list_item,viewGroup,false);
-       return  new MovieViewHolder(view);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.movie_list_item, viewGroup, false);
+        return new MovieViewHolder(view);
     }
 
     @Override
@@ -34,7 +34,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         String title = movie.getTitle();
         String thumbnel = movie.getThumbnail();
         double voteavg = movie.getVoteAverage();
-
         holder.titletext_view.setText(title);
         holder.vote_avgtext_view.setText(String.valueOf(voteavg));
         Picasso.get().load(thumbnel).into(holder.thumbnelimgview);
@@ -42,9 +41,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
     @Override
     public int getItemCount() {
-        if (mMovies==null){
+        if (mMovies == null) {
             return 0;
-        }else{
+        } else {
             return mMovies.size();
         }
     }
@@ -65,9 +64,10 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         notifyDataSetChanged();
     }
 
-    public class MovieViewHolder extends RecyclerView.ViewHolder{
-        TextView titletext_view,vote_avgtext_view;
+    public class MovieViewHolder extends RecyclerView.ViewHolder {
+        TextView titletext_view, vote_avgtext_view;
         ImageView thumbnelimgview;
+
         public MovieViewHolder(@NonNull View itemView) {
             super(itemView);
             thumbnelimgview = itemView.findViewById(R.id.iv_thumbnail);
