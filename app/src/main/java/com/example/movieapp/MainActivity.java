@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.refresh_data) {
             if (InternetConnection.checkConnection(this)) {
                 // Its Available...
-                Toast.makeText(this, "Internet Connection Is Avaliable", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Internet Connection Is Available", Toast.LENGTH_SHORT).show();
                 loadMovieData();
             } else {
                 // Not Available...
