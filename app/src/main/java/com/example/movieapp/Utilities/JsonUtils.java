@@ -23,6 +23,7 @@ public class JsonUtils {
      * Each movie in the TheMovieDb JSON data is an element of the "results" array
      */
     private static final String KEY_RESULTS = "results";
+    private static final String KEY_ID= "id";
 
     /**
      * Original title for the movie
@@ -135,6 +136,12 @@ public class JsonUtils {
                 voteAverage = currentMovie.getDouble(KEY_VOTE_AVERAGE);
             }
 
+            int id = 0;
+            if (currentMovie.has(KEY_ID)) {
+                // Extract the value for the key called "vote_average"
+                voteAverage = currentMovie.getDouble(KEY_ID);
+            }
+
             // For a given movie, if it contains the key called "release_date", extract the value for the key
             String releaseDate = null;
             if (currentMovie.has(KEY_RELEASE_DATE)) {
@@ -143,7 +150,7 @@ public class JsonUtils {
             }
 
             // Create a new {@link Movie} object
-            Movie movie = new Movie(originalTitle, thumbnailUrl, overView, voteAverage, releaseDate);
+            Movie movie = new Movie(id,originalTitle, thumbnailUrl, overView, voteAverage, releaseDate);
             // Add the new {@link Movie} to the list of movies
             movies.add(movie);
         }

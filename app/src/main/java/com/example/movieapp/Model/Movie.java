@@ -1,6 +1,10 @@
 package com.example.movieapp.Model;
 
-public class Movie {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Movie implements Parcelable {
+    private int mid;
     /** Title of the movie */
     private String mTitle;
     /** Movie poster image thumbnail */
@@ -21,13 +25,35 @@ public class Movie {
      * @param voteAverage is user rating of the movie
      * @param releaseDate is the release date of the movie
      */
-    public Movie(String title, String thumbnail, String overview, double voteAverage, String releaseDate) {
+    public Movie(int mid,String title, String thumbnail, String overview, double voteAverage, String releaseDate) {
+        this.mid = mid;
         mTitle = title;
         mThumbnail = thumbnail;
         mOverview = overview;
         mVoteAverage = voteAverage;
         mReleaseDate = releaseDate;
     }
+
+    private Movie(Parcel in) {
+        mid = in.readInt();
+        mTitle = in.readString();
+        mThumbnail = in.readString();
+        mOverview = in.readString();
+        mVoteAverage = in.readDouble();
+        mReleaseDate = in.readString();
+    }
+
+    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
+        @Override
+        public Movie createFromParcel(Parcel in) {
+            return new Movie(in);
+        }
+
+        @Override
+        public Movie[] newArray(int size) {
+            return new Movie[size];
+        }
+    };
 
     /**
      * Returns the original title of the movie
@@ -62,5 +88,23 @@ public class Movie {
      */
     public String getReleaseData() {
         return mReleaseDate;
+    }
+    public int getId(){
+        return mid;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(mid);
+        dest.writeString(mTitle);
+        dest.writeString(mThumbnail);
+        dest.writeString(mOverview);
+        dest.writeDouble(mVoteAverage);
+        dest.writeString(mReleaseDate);
     }
 }

@@ -16,9 +16,15 @@ import java.util.List;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
     List<Movie> mMovies;
+    private final movieAdapterOnClickHandler onClickHandler;
 
-    public MovieAdapter(List<Movie> movies) {
+    public MovieAdapter(List<Movie> movies, movieAdapterOnClickHandler onclick) {
         this.mMovies = movies;
+        onClickHandler = onclick;
+    }
+
+    public interface movieAdapterOnClickHandler {
+        void onItemClick(Movie movie);
     }
 
     @NonNull
@@ -64,7 +70,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         notifyDataSetChanged();
     }
 
-    public class MovieViewHolder extends RecyclerView.ViewHolder {
+    public class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView titletext_view, vote_avgtext_view;
         ImageView thumbnelimgview;
 
@@ -73,6 +79,15 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
             thumbnelimgview = itemView.findViewById(R.id.iv_thumbnail);
             titletext_view = itemView.findViewById(R.id.tv_title);
             vote_avgtext_view = itemView.findViewById(R.id.tv_vote_average);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            int adapterposition = getAdapterPosition();
+            Movie movie = mMovies.get(adapterposition);
+            onClickHandler.onItemClick(movie);
+
         }
     }
 }

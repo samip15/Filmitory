@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -30,7 +31,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MovieAdapter.movieAdapterOnClickHandler{
     private static final String TAG = "MainActivity";
 
     private MovieAdapter mMovieAdapter;
@@ -50,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
         List<Movie> movies = new ArrayList<>();
-        mMovieAdapter = new MovieAdapter(movies);
+        mMovieAdapter = new MovieAdapter(movies,this);
         mRecyclerView.setAdapter(mMovieAdapter);
         loadMovieData();
     }
@@ -69,6 +70,14 @@ public class MainActivity extends AppCompatActivity {
     private void showErrorMessage() {
         mErrorMessageDisplay.setVisibility(View.VISIBLE);
         mRecyclerView.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void onItemClick(Movie movie) {
+        Intent intent = new Intent(MainActivity.this,DetailActivity.class);
+        intent.putExtra("movie",movie);
+        startActivity(intent);
+
     }
 
     public class FetchMovieTask extends AsyncTask<String, Void, List<Movie>> {
