@@ -2,6 +2,7 @@ package com.example.movieapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -31,7 +32,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements MovieAdapter.movieAdapterOnClickHandler{
+public class MainActivity extends AppCompatActivity implements MovieAdapter.movieAdapterOnClickHandler {
     private static final String TAG = "MainActivity";
 
     private MovieAdapter mMovieAdapter;
@@ -44,6 +45,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.movi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         mRecyclerView = findViewById(R.id.rv_movie);
         mLoadingindicator = findViewById(R.id.progress_bar_laoding_indicator);
         mErrorMessageDisplay = findViewById(R.id.tv_error_message);
@@ -51,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.movi
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
         List<Movie> movies = new ArrayList<>();
-        mMovieAdapter = new MovieAdapter(movies,this);
+        mMovieAdapter = new MovieAdapter(movies, this);
         mRecyclerView.setAdapter(mMovieAdapter);
         loadMovieData();
     }
@@ -74,8 +77,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.movi
 
     @Override
     public void onItemClick(Movie movie) {
-        Intent intent = new Intent(MainActivity.this,DetailActivity.class);
-        intent.putExtra("movie",movie);
+        Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+        intent.putExtra("movie", movie);
         startActivity(intent);
 
     }
@@ -124,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.movi
             if (movies != null && !movies.isEmpty()) {
                 showMovieDataView();
                 mMovieAdapter.addAll(movies);
-            }else {
+            } else {
                 showErrorMessage();
             }
         }
